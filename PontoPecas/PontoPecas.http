@@ -1,0 +1,6 @@
+@PontoPecas_HostAddress = http://localhost:5200
+
+GET {{PontoPecas_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
