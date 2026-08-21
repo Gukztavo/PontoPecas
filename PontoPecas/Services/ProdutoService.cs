@@ -63,5 +63,24 @@ namespace PontoPecas.Services
                 CategoriaNome = categoria.Nome
             };
         }
+
+        public async Task<List<ProdutoResponse>> ListarProdutosAsync()
+        {
+            var produtos = await _context.Produtos
+                .Select(produto => new ProdutoResponse
+                {
+                    Id = produto.Id,
+                    Sku = produto.Sku,
+                    Nome = produto.Nome,
+                    PrecoEntrada = produto.PrecoEntrada,
+                    PrecoSaida = produto.PrecoSaida,
+                    QuantidadeEstoque = produto.QuantidadeEstoque,
+                    Observacao = produto.Observacao,
+                    CategoriaId = produto.CategoriaId,
+                    CategoriaNome = produto.Categoria.Nome
+                }).ToListAsync();
+            return produtos;
+                
+        }
     }
 }
