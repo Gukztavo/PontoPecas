@@ -29,5 +29,16 @@ namespace PontoPecas.Controllers
             var produtos = await _service.ListarProdutosAsync();
             return Ok(produtos);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> BuscasProdutoPorId(int id)
+        {
+            var produto = await _service.BuscarProdutoPorIdAsync(id);
+            if (produto == null)
+            {
+                return NotFound();
+            }
+            return Ok(produto);
+        }
     }
 }

@@ -82,5 +82,25 @@ namespace PontoPecas.Services
             return produtos;
                 
         }
+
+        public async Task<ProdutoResponse?> BuscarProdutoPorIdAsync(int id)
+        {
+            var produto = await _context.Produtos
+                .Where(p => p.Id == id)
+                .Select(p => new ProdutoResponse
+                {
+                    Id = p.Id,
+                    Sku = p.Sku,
+                    Nome = p.Nome,
+                    PrecoEntrada = p.PrecoEntrada,
+                    PrecoSaida = p.PrecoSaida,
+                    QuantidadeEstoque = p.QuantidadeEstoque,
+                    Observacao = p.Observacao,
+                    CategoriaId = p.CategoriaId,
+                    CategoriaNome = p.Categoria.Nome
+                })
+                .FirstOrDefaultAsync();
+            return produto;
+        }
     }
 }
