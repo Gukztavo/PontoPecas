@@ -24,9 +24,9 @@ namespace PontoPecas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarProdutos()
+        public async Task<IActionResult> ListarProdutos( int page, int pageSize)
         {
-            var produtos = await _service.ListarProdutosAsync();
+            var produtos = await _service.ListarProdutosAsync(page,pageSize);
             return Ok(produtos);
         }
 
@@ -34,6 +34,17 @@ namespace PontoPecas.Controllers
         public async Task<IActionResult> BuscasProdutoPorId(int id)
         {
             var produto = await _service.BuscarProdutoPorIdAsync(id);
+            if (produto == null)
+            {
+                return NotFound();
+            }
+            return Ok(produto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AtualizarProduto(int id, AtualizarProdutoRequest request)
+        {
+            var produto = await _service.AtualizarProdutoAsync(id, request);
             if (produto == null)
             {
                 return NotFound();

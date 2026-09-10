@@ -64,7 +64,7 @@ namespace PontoPecas.Services
             };
         }
 
-        public async Task<List<ProdutoResponse>> ListarProdutosAsync()
+        public async Task<List<ProdutoResponse>> ListarProdutosAsync(int page, int pageSize)
         {
             var produtos = await _context.Produtos
                 .Select(produto => new ProdutoResponse
@@ -78,7 +78,10 @@ namespace PontoPecas.Services
                     Observacao = produto.Observacao,
                     CategoriaId = produto.CategoriaId,
                     CategoriaNome = produto.Categoria.Nome
-                }).ToListAsync();
+                })
+                .Skip((page -1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
             return produtos;
                 
         }
@@ -102,5 +105,29 @@ namespace PontoPecas.Services
                 .FirstOrDefaultAsync();
             return produto;
         }
+
+        public async Task<ProdutoResponse?> AtualizarProdutoAsync(int id, AtualizarProdutoRequest request)
+        {
+            var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (produto == null)
+            {
+                return null;
+            }
+
+            produto.Sku = request.Sku;
+            produto.Nome = request.Nome;
+            produto.PrecoEntrada = request.PrecoEntrada;
+            produto.PrecoSaida = request.PrecoSaida;
+            produto.QuantidadeEstoque = request.QuantidadeEstoque;
+            produto.Observacao = request.Observacao;
+            produto.CategoriaId = request.CategoriaId;
+
+            await _context.SaveChangesAsync();
+            return await BuscarProdutoPorIdAsync(id);
+        }
+        // agora precisamos pegar o valor da categoria para atualizar o produto pra isso temos a função que 
+        // busca no banco de dados a categoria pelo id e se não encontrar lança uma exceção
+        // pra proximo passso chamar no controle e ver a rota de atualizar produto
     }
 }
