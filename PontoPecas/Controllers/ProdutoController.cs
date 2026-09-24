@@ -24,9 +24,20 @@ namespace PontoPecas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarProdutos( int page, int pageSize)
+        public async Task<IActionResult> ListarProdutos(int page = 1,int pageSize = 10)
         {
-            var produtos = await _service.ListarProdutosAsync(page,pageSize);
+            if (page < 1)
+            {
+                return BadRequest("A página deve ser maior ou igual a 1.");
+            }
+
+            if (pageSize < 1)
+            {
+                return BadRequest("O tamanho da página deve ser maior ou igual a 1.");
+            }
+
+            var produtos = await _service.ListarProdutosAsync(page, pageSize);
+
             return Ok(produtos);
         }
 
